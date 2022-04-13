@@ -1,162 +1,288 @@
 ---
 title: "Data Visualization"
 author: "19BCE1612 - Devesh Tibarewal"
-date: "25 February 2022"
+date: "11 April 2022"
 output:
   word_document: default
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
-subtitle: "Digital Assignment - 1"
+subtitle: "Digital Assignment - 2"
 ---
 
-#### __Abstarct__
-This analysis is being done on data available on nvbdcp.gov.in about the vector-borne disease in India. Data on Vector-Borne Diseases is comprised of the following columns i.e. "States of India", "Cases", "Deaths" and visualized using R and Tableau. Prediction about how the disease will change over the years will be done as well using R.
-
-#### __Introduction__
-Across many countries across the world, vector-borne diseases are a big issue. We will be focusing on data from Indian states on vector-borne diseases in this project. We've concentrated on identifying the important places where such diseases are more frequent, as well as the areas where improved activities will be required to prevent future deaths and cases.
-
-The dataset used for the following is analysis is present on data.gov.in and can be freely copied through this link:
-
--   [Dengue Dataset](https://nvbdcp.gov.in/index4.php?lang=1&level=0&linkid=431&lid=3715)
--   [Malaria Dataset](https://nvbdcp.gov.in/index4.php?lang=1&level=0&linkid=564&lid=3867)
+#### __Define Multivariate Data.__
+Multivariate data analysis is a type of statistical analysis that involves more than two dependent variables, resulting in a single outcome. Many problems in the world can be practical examples of multivariate equations as whatever happens in the world happens due to multiple reasons. 
 
 
-Visualization done through tableau can be accessed through this link:
-
--   [Dengue Cases and Deaths in India in 2015](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2015?:language=en-US&:display_count=n&:origin=viz_share_link)
--   [Dengue Cases and Deaths in India in 2016](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2016?:language=en-US&:display_count=n&:origin=viz_share_link)
--   [Dengue Cases and Deaths in India in 2017](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2017?:language=en-US&:display_count=n&:origin=viz_share_link)
--   [Dengue Cases and Deaths in India in 2018](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2018?:language=en-US&:display_count=n&:origin=viz_share_link)
--   [Dengue Cases and Deaths in India in 2019](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2019?:language=en-US&:display_count=n&:origin=viz_share_link)
--   [Dengue Cases and Deaths in India in 2020](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2020?:language=en-US&:display_count=n&:origin=viz_share_link)
--   [Malaria Cases and Deaths in India in 2014](https://public.tableau.com/views/MalariaDA1/MalariaCasesandDeathsinIndiain2014?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link)
--   [Malaria Cases and Deaths in India in 2015](https://public.tableau.com/views/MalariaDA1/MalariaCasesandDeathsinIndiain2015?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link)
--   [Malaria Cases and Deaths in India in 2016](https://public.tableau.com/views/MalariaDA1/MalariaCasesandDeathsinIndiain2016?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link)
+#### __Example of multivariate data with a case study__
+All the datasets that contains more than 2 attributes can be considered as Multivariate data like the dataset used in my notebook below.
 
 
-#### __Tools Used__
-- R
-- Tableau Public
+#### __My Notebook__
 
-
-#### __Experimentation__
-
-##### __Dengue__
-
-- Dengue is a viral disease
-- It is transmitted by the infective bite of Aedes Aegypti mosquito
-- Man develops disease after 5-6 days of being bitten by an infective mosquito
-- It occurs in two forms: Dengue Fever and Dengue Haemorrhagic Fever(DHF)
-- Dengue Fever is a severe, flu-like illness
-- Dengue Haemorrhagic Fever (DHF) is a more severe form of disease, which may cause death
-- Person suspected of having dengue fever or DHF must see a doctor at once
-
-![Dengue Cases and Deaths in India in 2015](images/dengue/Dengue Cases and Deaths in India in 2015.png)
-![Dengue Cases and Deaths in India in 2016](images/dengue/Dengue Cases and Deaths in India in 2016.png)
-![Dengue Cases and Deaths in India in 2017](images/dengue/Dengue Cases and Deaths in India in 2017.png)
-![Dengue Cases and Deaths in India in 2018](images/dengue/Dengue Cases and Deaths in India in 2018.png)
-![Dengue Cases and Deaths in India in 2019](images/dengue/Dengue Cases and Deaths in India in 2019.png)
-![Dengue Cases and Deaths in India in 2020](images/dengue/Dengue Cases and Deaths in India in 2020.png)
-```{r, echo=FALSE, warning=FALSE}
-data <- read.csv('dengue_csv.csv')
-data1 <- read.csv('malaria_csv.csv')
+##### Importing Necessary Dependencies.
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib as mpl
+import numpy as np
+import seaborn as sns
 ```
 
-```{r, echo=FALSE, warning=FALSE}
-years = c(2015:2020)
-cases = c(sum(data$X2015_Cases), 
-          sum(data$X2016_Cases),
-          sum(data$X2017_Cases), 
-          sum(data$X2018_Cases), 
-          sum(data$X2019_Cases), 
-          sum(data$X2020_Cases))
-deaths = c(sum(data$X2015_Deaths), 
-           sum(data$X2016_Deaths),
-           sum(data$X2017_Deaths), 
-           sum(data$X2018_Deaths), 
-           sum(data$X2019_Deaths), 
-           sum(data$X2020_Deaths))
-df <- data.frame(Years=years, Cases=cases, Deaths=deaths)
+##### Loading and merging Dataset.
+```{python}
+white_wine = pd.read_csv('winequality-white.csv', sep=';')
+red_wine = pd.read_csv('winequality-red.csv', sep=';')
 
-years1 = c(2014:2016)
-cases1 = c(sum(data1$X2014_Malaria.cases), 
-           sum(data1$X2015_Malaria.cases),
-           sum(data1$X2016_Malaria.cases))
-deaths1 = c(sum(data1$X2014_Deaths), 
-            sum(data1$X2015_Deaths),
-            sum(data1$X2016_Deaths))
-df1 <- data.frame(Years=years1, Cases=cases1, Deaths=deaths1)
+# store wine type as an attribute
+red_wine['wine_type'] = 'red'   
+white_wine['wine_type'] = 'white'
 
-# Defining GGPlot Regression Function
-ggplotRegression <- function (fit, main) {
-  require(ggplot2)
-  ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1]), main=main) + 
-    geom_point() +
-    stat_smooth(method = "lm", col = "red") +
-    labs(title = main)
-}
+# bucket wine quality scores into qualitative quality labels
+red_wine['quality_label'] = red_wine['quality'].apply(lambda value: 'low' 
+                                                          if value <= 5 else 'medium' 
+                                                              if value <= 7 else 'high')
+red_wine['quality_label'] = pd.Categorical(red_wine['quality_label'], 
+                                           categories=['low', 'medium', 'high'])
+white_wine['quality_label'] = white_wine['quality'].apply(lambda value: 'low' 
+                                                              if value <= 5 else 'medium' 
+                                                                  if value <= 7 else 'high')
+white_wine['quality_label'] = pd.Categorical(white_wine['quality_label'], 
+                                             categories=['low', 'medium', 'high'])
+
+# merge red and white wine datasets
+wines = pd.concat([red_wine, white_wine])
+
+# re-shuffle records just to randomize data points
+wines = wines.sample(frac=1, random_state=42).reset_index(drop=True)
 ```
 
-Dengue has been spread very widely across India and many people die because of it throughout the country. On the positive side during the analysis, it was observed that the number of deaths in India because of dengue has been reducing drastically.
-
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-fit1 <- lm(Cases ~ Years, data = df)
-ggplotRegression(fit1, "Cases of Dengue found in India (Per Year)")
+##### Understand dataset features and values.
+```{python}
+wines.head()
 ```
 
-##### __Inference__
-Number of cases of dengue in India has shown a slight decrease from 2015 to 2020
+##### Exploratory Data Analysis and Visualizations
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-fit2 <- lm(Deaths ~ Years, data = df)
-ggplotRegression(fit2, "Deaths caused due to Dengue in India (per year)")
+Descriptive Statistics
+
+```{python}
+subset_attributes = ['residual sugar', 'total sulfur dioxide', 'sulphates', 'alcohol', 'volatile acidity', 'quality']
+rs = round(red_wine[subset_attributes].describe(),2)
+ws = round(white_wine[subset_attributes].describe(),2)
+pd.concat([rs, ws], axis=1, keys=['Red Wine Statistics', 'White Wine Statistics'])
 ```
 
-##### __Inference__
-Number of cases of dengue in India has decrease a lot from 2015 to 2020
-
-
-
-##### __Malaria__
-
-- Malaria is a potentially life threatening parasitic disease caused by parasites known as Plasmodium viviax (P.vivax), Plasmodium falciparum (P.falciparum), Plasmodium malariae (P.malariae)and Plasmodium ovale (P.ovale).
-- It is transmitted by the infective bite of Anopheles mosquito.
-- Man develops disease after 10 to 14 days of being bitten by an infective mosquito.
-- There are two types of parasites of human malaria, Plasmodium vivax, P. falciparum, which are commonly reported from India.
-- Inside the human host, the parasite undergoes a series of changes as part of its complex life cycle. (Plasmodium is a protozoan parasite).
-- The parasite completes life cycle in liver cells (pre-erythrocytic schizogony) and red blood cells (erythrocytic schizogony).
-- Infection with P.falciparum is the most deadly form of malaria.
-
-![Malaria Cases and Deaths in India in 2014](images/malaria/Malaria Cases and Deaths in India in 2014.png)
-![Malaria Cases and Deaths in India in 2015](images/malaria/Malaria Cases and Deaths in India in 2015.png)
-![Malaria Cases and Deaths in India in 2016](images/malaria/Malaria Cases and Deaths in India in 2016.png)
-
-Malaria is yet another disease spread because of mosquitos. It is a very deadly disease and kills people in big numbers. Just like other diseases we talked about, deaths due to malaria have been reducing too. According to the linear regression, deaths due to Malaria will reach zero after 2016.
-
-
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-fit1 <- lm(Cases ~ Years, data = df1)
-ggplotRegression(fit1, "Cases of Malaria found in India (Per Year)")
+```{python}
+subset_attributes = ['alcohol', 'volatile acidity', 'pH', 'quality']
+ls = round(wines[wines['quality_label'] == 'low'][subset_attributes].describe(),2)
+ms = round(wines[wines['quality_label'] == 'medium'][subset_attributes].describe(),2)
+hs = round(wines[wines['quality_label'] == 'high'][subset_attributes].describe(),2)
+pd.concat([ls, ms, hs], axis=1, keys=['Low Quality Wine', 'Medium Quality Wine', 'High Quality Wine'])
 ```
 
-##### __Inference__
-Number of cases of malaria in India has shown a slight decrease from 2014 to 2016
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-fit2 <- lm(Deaths ~ Years, data = df1)
-ggplotRegression(fit2, "Deaths caused due to Malaria in India (per year)")
+##### Multivariate Analysis
+
+##### Visualizing two dimensions
+```{python}
+f, ax = plt.subplots(figsize=(10, 6))
+corr = wines.corr()
+hm = sns.heatmap(round(corr,2), annot=True, ax=ax, cmap="coolwarm",fmt='.2f',
+            linewidths=.05)
+f.subplots_adjust(top=0.93)
+t = f.suptitle('Wine Attributes Correlation Heatmap', fontsize=14)
+plt.show()
 ```
 
-##### __Inference__
-Number of cases of malaria in India has decrease a lot from 2014 to 2016
+##### Inference:
+The gradients in the heatmap vary based on the strength of the correlation and you can clearly see it is very easy to spot potential attributes having strong correlations amongst themselves. Another way to visualize the same is to use pair-wise scatter plots amongst attributes of interest.
+
+
+
+```{python}
+cols = ['density', 'residual sugar', 'total sulfur dioxide', 'fixed acidity']
+pp = sns.pairplot(wines[cols], height=1.8, aspect=1.8,
+                  plot_kws=dict(edgecolor="k", linewidth=0.5),
+                  diag_kind="kde", diag_kws=dict(shade=True))
+
+fig = pp.fig 
+fig.subplots_adjust(top=0.93, wspace=0.3)
+t = fig.suptitle('Wine Attributes Pairwise Plots', fontsize=14)
+plt.show()
+```
+
+##### Inference:
+Based on the above plot, you can see that scatter plots are also a decent way of observing potential relationships or patterns in two-dimensions for data attributes.
+
+```{python}
+cols = ['density', 'residual sugar', 'total sulfur dioxide', 'fixed acidity']
+subset_df = wines[cols]
+
+from sklearn.preprocessing import StandardScaler
+
+ss = StandardScaler()
+scaled_df = ss.fit_transform(subset_df)
+scaled_df = pd.DataFrame(scaled_df, columns=cols)
+final_df = pd.concat([scaled_df, wines['wine_type']], axis=1)
+final_df.head()
+
+from pandas.plotting import parallel_coordinates
+f = plt.figure()
+pc = parallel_coordinates(final_df, 'wine_type', color=('#FFE888', '#FF9999'))
+plt.show()
+```
+
+##### Inference:
+Basically, in this visualization as depicted above, points are represented as connected line segments. Each vertical line represents one data attribute. One complete set of connected line segments across all the attributes represents one data point. Hence points that tend to cluster will appear closer together. Just by looking at it, we can clearly see that density is slightly more for red wines as compared to white wines. Also residual sugar and total sulfur dioxide is higher for white wines as compared to red and fixed acidity is higher for red wines as compared to white wines.
+
+
+##### Two Continuous Numeric attributes 
+```{python}
+f = plt.figure()
+plt.scatter(wines['sulphates'], wines['alcohol'], alpha=0.4, edgecolors='w')
+plt.xlabel('Sulphates')
+plt.ylabel('Alcohol')
+plt.title('Wine Sulphates - Alcohol Content',y=1.05)
+plt.show()
+
+f = plt.figure()
+jp = sns.jointplot(x='sulphates', y='alcohol', data=wines, kind='reg', space=0, height=5, ratio=4)
+plt.show()
+```
+
+##### Inference:
+The scatter plot is depicted on the left side and the joint plot on the right in the above figure. Like we mentioned, you can check out correlations, relationships as well as individual distributions in the joint plot.
+
+##### Two Discrete Categorical attributes 
+```{python}
+fig = plt.figure(figsize = (10, 4))
+title = fig.suptitle("Wine Type - Quality", fontsize=14)
+fig.subplots_adjust(top=0.85, wspace=0.3)
+
+ax1 = fig.add_subplot(1,2, 1)
+ax1.set_title("Red Wine")
+ax1.set_xlabel("Quality")
+ax1.set_ylabel("Frequency") 
+rw_q = red_wine['quality'].value_counts()
+rw_q = (list(rw_q.index), list(rw_q.values))
+ax1.set_ylim([0, 2500])
+ax1.tick_params(axis='both', which='major', labelsize=8.5)
+bar1 = ax1.bar(rw_q[0], rw_q[1], color='red', 
+        edgecolor='black', linewidth=1)
+
+
+ax2 = fig.add_subplot(1,2, 2)
+ax2.set_title("White Wine")
+ax2.set_xlabel("Quality")
+ax2.set_ylabel("Frequency") 
+ww_q = white_wine['quality'].value_counts()
+ww_q = (list(ww_q.index), list(ww_q.values))
+ax2.set_ylim([0, 2500])
+ax2.tick_params(axis='both', which='major', labelsize=8.5)
+bar2 = ax2.bar(ww_q[0], ww_q[1], color='white', 
+        edgecolor='black', linewidth=1)
+plt.show()
+```
+
+While this is a good way to visualize categorical data, as you can see, leveraging matplotlib has resulted in writing a lot of code. Another good way is to use stacked bars or multiple bars for the different attributes in a single plot. We can leverage seaborn for the same easily.
+
+```{python}
+f = plt.figure()
+cp = sns.countplot(x="quality", hue="wine_type", data=wines, palette={"red": "#FF9999", "white": "#FFE888"})
+plt.show()
+```
+
+This definitely looks cleaner and you can also effectively compare the different categories easily from this single plot.
+
+##### Mixed attributes (numeric & categorical)
+```{python}
+fig = plt.figure(figsize = (10,4))
+title = fig.suptitle("Sulphates Content in Wine", fontsize=14)
+fig.subplots_adjust(top=0.85, wspace=0.3)
+
+ax1 = fig.add_subplot(1,2, 1)
+ax1.set_title("Red Wine")
+ax1.set_xlabel("Sulphates")
+ax1.set_ylabel("Frequency") 
+ax1.set_ylim([0, 1200])
+ax1.text(1.2, 800, r'$\mu$='+str(round(red_wine['sulphates'].mean(),2)), 
+         fontsize=12)
+r_freq, r_bins, r_patches = ax1.hist(red_wine['sulphates'], color='red', bins=15,
+                                     edgecolor='black', linewidth=1)
+
+ax2 = fig.add_subplot(1,2, 2)
+ax2.set_title("White Wine")
+ax2.set_xlabel("Sulphates")
+ax2.set_ylabel("Frequency")
+ax2.set_ylim([0, 1200])
+ax2.text(0.8, 800, r'$\mu$='+str(round(white_wine['sulphates'].mean(),2)), 
+         fontsize=12)
+w_freq, w_bins, w_patches = ax2.hist(white_wine['sulphates'], color='white', bins=15,
+                                     edgecolor='black', linewidth=1)
+plt.show()
+```
+
+
+```{python}
+fig = plt.figure(figsize = (10, 4))
+title = fig.suptitle("Sulphates Content in Wine", fontsize=14)
+fig.subplots_adjust(top=0.85, wspace=0.3)
+
+ax1 = fig.add_subplot(1,2, 1)
+ax1.set_title("Red Wine")
+ax1.set_xlabel("Sulphates")
+ax1.set_ylabel("Density") 
+sns.kdeplot(red_wine['sulphates'], ax=ax1, shade=True, color='r')
+
+ax2 = fig.add_subplot(1,2, 2)
+ax2.set_title("White Wine")
+ax2.set_xlabel("Sulphates")
+ax2.set_ylabel("Density") 
+sns.kdeplot(white_wine['sulphates'], ax=ax2, shade=True, color='y')
+plt.show()
+```
+
+
+```{python}
+fig = plt.figure(figsize = (6, 4))
+title = fig.suptitle("Sulphates Content in Wine", fontsize=14)
+fig.subplots_adjust(top=0.85, wspace=0.3)
+ax = fig.add_subplot(1,1, 1)
+ax.set_xlabel("Sulphates")
+ax.set_ylabel("Frequency") 
+
+g = sns.FacetGrid(wines, hue='wine_type', palette={"red": "r", "white": "y"})
+g.map(sns.distplot, 'sulphates', kde=False, bins=15, ax=ax)
+ax.legend(title='Wine Type')
+plt.show()
+```
+
+
+```{python}
+f, (ax) = plt.subplots(1, 1, figsize=(12, 4))
+f.suptitle('Wine Quality - Alcohol Content', fontsize=14)
+
+sns.boxplot(x="quality", y="alcohol", data=wines,  ax=ax)
+ax.set_xlabel("Wine Quality",size = 12,alpha=0.8)
+ax.set_ylabel("Wine Alcohol %",size = 12,alpha=0.8)
+plt.show()
+```
+
+```{python}
+f, (ax) = plt.subplots(1, 1, figsize=(12, 4))
+f.suptitle('Wine Quality - Sulphates Content', fontsize=14)
+
+sns.violinplot(x="quality", y="sulphates", data=wines,  ax=ax)
+ax.set_xlabel("Wine Quality",size = 12,alpha=0.8)
+ax.set_ylabel("Wine Sulphates",size = 12,alpha=0.8)
+plt.show()
+```
 
 
 #### __Results__
-With this analysis, we were able to visualize how different states are affected by various vector-borne diseases. We were also able to analyze the trend about how these diseases will change over time and when we can expect no person to die because of them.
+Above notebook are some types of graphs which are used to visualize multivariate dataset. The Notebook can be accessed this [Github Link](https://github.com/MIstakenGem3017/CSE3020---Data-Visualization/tree/main/Digital%20Assignment%202)
 
 #### __Conclusion__
-This experiment enables us to see India in a different way. For someone in a state where no such disease exists, this experiment serves as an eye-opener. Using this information generated, medical organizations can conduct experiments accordingly about how these places have such a high number of victims while other states have less. Also government can organise facilities
-accordingly based on the number of cases in each state.
+This experiment enables us to understand and learn some effective strategies for visualizing data especially when the number of dimensions start to increase i.e. if we have a multivariate dataset.
