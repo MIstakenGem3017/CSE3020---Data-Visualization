@@ -1,0 +1,162 @@
+---
+title: "Data Visualization"
+author: "19BCE1612 - Devesh Tibarewal"
+date: "25 February 2022"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+  pdf_document: default
+subtitle: "Digital Assignment - 1"
+---
+
+#### __Abstarct__
+This analysis is being done on data available on nvbdcp.gov.in about the vector-borne disease in India. Data on Vector-Borne Diseases is comprised of the following columns i.e. "States of India", "Cases", "Deaths" and visualized using R and Tableau. Prediction about how the disease will change over the years will be done as well using R.
+
+#### __Introduction__
+Across many countries across the world, vector-borne diseases are a big issue. We will be focusing on data from Indian states on vector-borne diseases in this project. We've concentrated on identifying the important places where such diseases are more frequent, as well as the areas where improved activities will be required to prevent future deaths and cases.
+
+The dataset used for the following is analysis is present on data.gov.in and can be freely copied through this link:
+
+-   [Dengue Dataset](https://nvbdcp.gov.in/index4.php?lang=1&level=0&linkid=431&lid=3715)
+-   [Malaria Dataset](https://nvbdcp.gov.in/index4.php?lang=1&level=0&linkid=564&lid=3867)
+
+
+Visualization done through tableau can be accessed through this link:
+
+-   [Dengue Cases and Deaths in India in 2015](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2015?:language=en-US&:display_count=n&:origin=viz_share_link)
+-   [Dengue Cases and Deaths in India in 2016](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2016?:language=en-US&:display_count=n&:origin=viz_share_link)
+-   [Dengue Cases and Deaths in India in 2017](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2017?:language=en-US&:display_count=n&:origin=viz_share_link)
+-   [Dengue Cases and Deaths in India in 2018](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2018?:language=en-US&:display_count=n&:origin=viz_share_link)
+-   [Dengue Cases and Deaths in India in 2019](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2019?:language=en-US&:display_count=n&:origin=viz_share_link)
+-   [Dengue Cases and Deaths in India in 2020](https://public.tableau.com/views/DengueDA1/DengueCasesandDeathsinIndiain2020?:language=en-US&:display_count=n&:origin=viz_share_link)
+-   [Malaria Cases and Deaths in India in 2014](https://public.tableau.com/views/MalariaDA1/MalariaCasesandDeathsinIndiain2014?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link)
+-   [Malaria Cases and Deaths in India in 2015](https://public.tableau.com/views/MalariaDA1/MalariaCasesandDeathsinIndiain2015?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link)
+-   [Malaria Cases and Deaths in India in 2016](https://public.tableau.com/views/MalariaDA1/MalariaCasesandDeathsinIndiain2016?:language=en-US&publish=yes&:display_count=n&:origin=viz_share_link)
+
+
+#### __Tools Used__
+- R
+- Tableau Public
+
+
+#### __Experimentation__
+
+##### __Dengue__
+
+- Dengue is a viral disease
+- It is transmitted by the infective bite of Aedes Aegypti mosquito
+- Man develops disease after 5-6 days of being bitten by an infective mosquito
+- It occurs in two forms: Dengue Fever and Dengue Haemorrhagic Fever(DHF)
+- Dengue Fever is a severe, flu-like illness
+- Dengue Haemorrhagic Fever (DHF) is a more severe form of disease, which may cause death
+- Person suspected of having dengue fever or DHF must see a doctor at once
+
+![Dengue Cases and Deaths in India in 2015](images/dengue/Dengue Cases and Deaths in India in 2015.png)
+![Dengue Cases and Deaths in India in 2016](images/dengue/Dengue Cases and Deaths in India in 2016.png)
+![Dengue Cases and Deaths in India in 2017](images/dengue/Dengue Cases and Deaths in India in 2017.png)
+![Dengue Cases and Deaths in India in 2018](images/dengue/Dengue Cases and Deaths in India in 2018.png)
+![Dengue Cases and Deaths in India in 2019](images/dengue/Dengue Cases and Deaths in India in 2019.png)
+![Dengue Cases and Deaths in India in 2020](images/dengue/Dengue Cases and Deaths in India in 2020.png)
+```{r, echo=FALSE, warning=FALSE}
+data <- read.csv('dengue_csv.csv')
+data1 <- read.csv('malaria_csv.csv')
+```
+
+```{r, echo=FALSE, warning=FALSE}
+years = c(2015:2020)
+cases = c(sum(data$X2015_Cases), 
+          sum(data$X2016_Cases),
+          sum(data$X2017_Cases), 
+          sum(data$X2018_Cases), 
+          sum(data$X2019_Cases), 
+          sum(data$X2020_Cases))
+deaths = c(sum(data$X2015_Deaths), 
+           sum(data$X2016_Deaths),
+           sum(data$X2017_Deaths), 
+           sum(data$X2018_Deaths), 
+           sum(data$X2019_Deaths), 
+           sum(data$X2020_Deaths))
+df <- data.frame(Years=years, Cases=cases, Deaths=deaths)
+
+years1 = c(2014:2016)
+cases1 = c(sum(data1$X2014_Malaria.cases), 
+           sum(data1$X2015_Malaria.cases),
+           sum(data1$X2016_Malaria.cases))
+deaths1 = c(sum(data1$X2014_Deaths), 
+            sum(data1$X2015_Deaths),
+            sum(data1$X2016_Deaths))
+df1 <- data.frame(Years=years1, Cases=cases1, Deaths=deaths1)
+
+# Defining GGPlot Regression Function
+ggplotRegression <- function (fit, main) {
+  require(ggplot2)
+  ggplot(fit$model, aes_string(x = names(fit$model)[2], y = names(fit$model)[1]), main=main) + 
+    geom_point() +
+    stat_smooth(method = "lm", col = "red") +
+    labs(title = main)
+}
+```
+
+Dengue has been spread very widely across India and many people die because of it throughout the country. On the positive side during the analysis, it was observed that the number of deaths in India because of dengue has been reducing drastically.
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+fit1 <- lm(Cases ~ Years, data = df)
+ggplotRegression(fit1, "Cases of Dengue found in India (Per Year)")
+```
+
+##### __Inference__
+Number of cases of dengue in India has shown a slight decrease from 2015 to 2020
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+fit2 <- lm(Deaths ~ Years, data = df)
+ggplotRegression(fit2, "Deaths caused due to Dengue in India (per year)")
+```
+
+##### __Inference__
+Number of cases of dengue in India has decrease a lot from 2015 to 2020
+
+
+
+##### __Malaria__
+
+- Malaria is a potentially life threatening parasitic disease caused by parasites known as Plasmodium viviax (P.vivax), Plasmodium falciparum (P.falciparum), Plasmodium malariae (P.malariae)and Plasmodium ovale (P.ovale).
+- It is transmitted by the infective bite of Anopheles mosquito.
+- Man develops disease after 10 to 14 days of being bitten by an infective mosquito.
+- There are two types of parasites of human malaria, Plasmodium vivax, P. falciparum, which are commonly reported from India.
+- Inside the human host, the parasite undergoes a series of changes as part of its complex life cycle. (Plasmodium is a protozoan parasite).
+- The parasite completes life cycle in liver cells (pre-erythrocytic schizogony) and red blood cells (erythrocytic schizogony).
+- Infection with P.falciparum is the most deadly form of malaria.
+
+![Malaria Cases and Deaths in India in 2014](images/malaria/Malaria Cases and Deaths in India in 2014.png)
+![Malaria Cases and Deaths in India in 2015](images/malaria/Malaria Cases and Deaths in India in 2015.png)
+![Malaria Cases and Deaths in India in 2016](images/malaria/Malaria Cases and Deaths in India in 2016.png)
+
+Malaria is yet another disease spread because of mosquitos. It is a very deadly disease and kills people in big numbers. Just like other diseases we talked about, deaths due to malaria have been reducing too. According to the linear regression, deaths due to Malaria will reach zero after 2016.
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+fit1 <- lm(Cases ~ Years, data = df1)
+ggplotRegression(fit1, "Cases of Malaria found in India (Per Year)")
+```
+
+##### __Inference__
+Number of cases of malaria in India has shown a slight decrease from 2014 to 2016
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+fit2 <- lm(Deaths ~ Years, data = df1)
+ggplotRegression(fit2, "Deaths caused due to Malaria in India (per year)")
+```
+
+##### __Inference__
+Number of cases of malaria in India has decrease a lot from 2014 to 2016
+
+
+#### __Results__
+With this analysis, we were able to visualize how different states are affected by various vector-borne diseases. We were also able to analyze the trend about how these diseases will change over time and when we can expect no person to die because of them.
+
+#### __Conclusion__
+This experiment enables us to see India in a different way. For someone in a state where no such disease exists, this experiment serves as an eye-opener. Using this information generated, medical organizations can conduct experiments accordingly about how these places have such a high number of victims while other states have less. Also government can organise facilities
+accordingly based on the number of cases in each state.
